@@ -1,0 +1,118 @@
+1)
+create or replace procedure group_inf
+as
+    CURSOR col IS
+        SELECT user_id, SUM(total) as total
+        FROM orders
+        GROUP BY user_id;
+begin
+    FOR user IN col LOOP
+        dbms_output.put_line(user.user_id  ' must pay '  user.total || ' tenge');
+    END LOOP;
+end;
+/
+
+
+BEGIN 
+   group_inf;
+END; 
+/
+
+2)
+CREATE OR REPLACE FUNCTION count_rec 
+RETURN number IS 
+ num_records INTEGER;
+BEGIN 
+   SELECT count (*) into num_records 
+   FROM customer; 
+   RETURN num_records; 
+END; 
+/ 
+
+DECLARE 
+   result  number(2); 
+BEGIN 
+   result := count_rec(); 
+   dbms_output.put_line('Total no. of Customers: ' || result); 
+END; 
+/
+
+
+3)
+CREATE OR REPLACE PROCEDURE update_product_price(
+    in_product_id INTEGER,
+    in_price NUMBER
+)
+IS
+BEGIN
+    UPDATE orders
+    SET total = in_price
+    WHERE product_id = in_product_id;
+ 
+    DBMS_OUTPUT.PUT_LINE('Number of rows cool updated: ' || SQL%ROWCOUNT);
+ 
+    COMMIT;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN 
+        DBMS_OUTPUT.PUT_LINE('No data found for the specified product ID.'); 
+    WHEN OTHERS THEN 
+        DBMS_OUTPUT.PUT_LINE('Error'); 
+        ROLLBACK;
+END;
+
+4)
+DECLARE
+    dont_valid exception;
+    user_idd varchar(20) := :Enter_ID;
+    User_pass varchar(20) := :Enter_password;
+    v_user_id varchar(20);
+    v_passwordd varchar(20);
+begin
+    IF LENGTH(user_pass) < 5 then
+        raise dont_valid;
+    ElSe
+        select user_id, passwordd into v_user_id, v_passwordd from customer_acc where user_id = user_idd and passwordd = user_pass;
+        if v_user_id = user_idd and v_passwordd = user_pass then
+            dbms_output.put_line('Successfully entered! ');
+        end if;
+    end if;
+exception
+    when no_data_found then
+        dbms_output.put_line('ID or password is incorrect! ');
+    when dont_valid then
+        dbms_output.put_line('The length of Password is less than 5!');
+    when others then
+        dbms_output.put_line('Exception has defined!');
+end;
+
+5)
+CREATE OR REPLACE TRIGGER row_counter
+BEFORE INSERT ON orders
+DECLARE
+    counter NUMBER := 0;
+BEGIN
+    FOR i in (select order_id from orders) LOOP
+        counter := counter + 1;
+    end loop;
+    DBMS_OUTPUT.PUT_LINE('Current number of rows in orders: ' || counter);
+END;
+
+insert into orders(order_id , user_id , product_id , cons_id , paid , order_date , total) values (21 , 17 , 1 , 2 , 'false' , '4/26/2023' , 5000);
+
+
+6) Additional
+CREATE OR REPLACE TRIGGER bonus
+BEFORE INSERT ON orders
+FOR EACH ROW
+DECLARE
+    summa NUMBER := 0;
+BEGIN
+    SELECT COUNT(*) INTO summa FROM orders WHERE user_id = :new.user_id GROUP BY user_id;
+    IF (summa >= 4) THEN
+        :new.total := :new.total * 0.8;
+    ELSIF (summa >= 9) THEN
+        :new.total := :new.total * 0.7;
+    END IF;
+END;
+insert into orders(order_id , user_id , product_id , cons_id , paid , order_date , total) values (22 , 2 , 1 , 1 , 'false' , '4/26/2023' , 5000);
+
