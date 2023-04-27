@@ -60,6 +60,8 @@ EXCEPTION
         ROLLBACK;
 END;
 
+update_product_price(in_product_id => 5, in_price => 10000);
+
 4)
 DECLARE
     dont_valid exception;
@@ -85,6 +87,9 @@ exception
         dbms_output.put_line('Exception has defined!');
 end;
 
+User -> 5	
+Pass -> 1g2443
+
 5)
 CREATE OR REPLACE TRIGGER row_counter
 BEFORE INSERT ON orders
@@ -97,7 +102,7 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Current number of rows in orders: ' || counter);
 END;
 
-insert into orders(order_id , user_id , product_id , cons_id , paid , order_date , total) values (21 , 17 , 1 , 2 , 'false' , '4/26/2023' , 5000);
+insert into orders(order_id , user_id , product_id , cons_id , paid , order_date , total) values (22 , 3 , 1 , 2 , 'false' , '4/26/2023' , 5000);
 
 
 6) Additional
@@ -114,5 +119,5 @@ BEGIN
         :new.total := :new.total * 0.7;
     END IF;
 END;
-insert into orders(order_id , user_id , product_id , cons_id , paid , order_date , total) values (22 , 2 , 1 , 1 , 'false' , '4/26/2023' , 5000);
+insert into orders(order_id , user_id , product_id , cons_id , paid , order_date , total) values (23 , 2 , 1 , 1 , 'false' , '4/26/2023' , 5000);
 
