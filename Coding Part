@@ -7,7 +7,7 @@ as
         GROUP BY user_id;
 begin
     FOR user IN col LOOP
-        dbms_output.put_line(user.user_id  ' must pay '  user.total || ' tenge');
+        dbms_output.put_line(user.user_id || ' must pay ' || user.total || ' tenge');
     END LOOP;
 end;
 /
