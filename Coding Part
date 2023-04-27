@@ -30,7 +30,7 @@ END;
 / 
 
 DECLARE 
-   result  number(2); 
+   result  number; 
 BEGIN 
    result := count_rec(); 
    dbms_output.put_line('Total no. of Customers: ' || result); 
