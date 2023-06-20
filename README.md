@@ -1,2 +1,3 @@
-# ClothShop written in PL/SQL
+# ClothShop
+ClothShop written in PL/SQL
 
