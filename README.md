@@ -1,1 +1,1 @@
-# PL-SQL-midterm
+ClothShop written in PL/SQL
